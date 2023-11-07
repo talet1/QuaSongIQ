@@ -2,58 +2,70 @@
 using namespace std;
 
 class Game {
-    int numQuy[3] = {0, 3, 0}, numSu[3] = {0, 3, 0}, boatSide = 1;
+    int numDevils[3] = {0, 3, 0}, numPriests[3] = {0, 3, 0}, boatSide = 1;
 
 public:
     void play() {
-        while (numQuy[2] != 3 || numSu[2] != 3) {
+        while (numDevils[2] != 3 || numPriests[2] != 3) {
             while (true) {
                 displayGameState();
-                int tempNumQuy, tempNumSu;
-                getInput(tempNumQuy, tempNumSu);
-                if (!inputValidation(tempNumQuy, tempNumSu)) {
-                    cout << "Số lượng quý và sứ không hợp lệ. Vui lòng nhập lại." << endl;
+                int tempnumDevils, tempnumPriests;
+                getInput(tempnumDevils, tempnumPriests);
+                if (!inputValidation(tempnumDevils, tempnumPriests)) {
+                    cout << "Invalid number of passengers. Please choose again" << endl;
                     continue;
                 } else {
-                    numQuy[boatSide] -= tempNumQuy;
-                    numSu[boatSide] -= tempNumSu;
-                    numQuy[3 - boatSide] += tempNumQuy;
-                    numSu[3 - boatSide] += tempNumSu;
+                    numDevils[boatSide] -= tempnumDevils;
+                    numPriests[boatSide] -= tempnumPriests;
+                    numDevils[3 - boatSide] += tempnumDevils;
+                    numPriests[3 - boatSide] += tempnumPriests;
                     moveBoat();
-                    // Check if there are more "quy" than "su" on the either side
-                    if ((numQuy[1] > numSu[1] && numSu[1] > 0) || (numQuy[2] > numSu[2] && numSu[2] > 0)) {
-                        cout << "Bạn đã thua cuộc! Số lượng quý nhiều hơn sứ." << endl;
+                    // Check if there are more "devil" than "priest" on the either side
+                    if ((numDevils[1] > numPriests[1] && numPriests[1] > 0) || (numDevils[2] > numPriests[2] && numPriests[2] > 0)) {
+                        cout << "Game Over! There are more devils than priests" << endl;
                         return;
                     }
                     break;
                 }
             }
         }
-        cout << "Bạn đã thắng cuộc!" << endl;
+        cout << "You win!" << endl;
     }
 
 private:
-    void displayGameState() {
-        cout << "Bờ 1: " << numQuy[1] << " quý, " << numSu[1] << " sứ" << endl;
-        cout << "Bờ 2: " << numQuy[2] << " quý, " << numSu[2] << " sứ" << endl;
-        cout << "Thuyền: " << (boatSide == 1 ? "-->" : "<--") << endl;
+    /*void displayGameState() {
+        cout << "Side 1: " << numDevils[1] << " Devils, " << numPriests[1] << " Priests" << endl;
+        cout << "Side 2: " << numDevils[2] << " Devils, " << numPriests[2] << " Priests" << endl;
+        cout << "Boat: " << (boatSide == 1 ? "-->" : "<--") << endl;
     }
+    */
+   // Display game state with ASCII art
+   void displayGameState() {
+        cout << "Side 1: " << string(numDevils[1], 'D') << " " << string(numPriests[1], 'P') << endl;
+        cout << "       " << endl;
+        cout << "    ]" << string(20, '~')<< "[" << endl;
+        cout << "    ]" << string(5, '~') << (boatSide == 1 ? " Boat --> " : " Boat <-- ") << string(5, '~') << "[" << endl;
+        cout << "    ]" << string(20, '~') << "[" << endl;
+        cout << "       " << endl;
+        cout << "Side 2: " << string(numDevils[2], 'D') << " " << string(numPriests[2], 'P') << endl;
+    }
+
     // Get input
-    void getInput(int &numQuy, int &numSu) {
-        cout << "Nhập số lượng quý: ";
-        cin >> numQuy;
-        cout << "Nhập số lượng sứ: ";
-        cin >> numSu;
+    void getInput(int &numDevils, int &numPriests) {
+        cout << "Enter number of devils: ";
+        cin >> numDevils;
+        cout << "Enter number of priests: ";
+        cin >> numPriests;
     }
     // Validate input
-    bool inputValidation(int tempNumQuy, int tempNumSu) {
-        // Check if the number of "quý" and "sứ" on the current side will go below zero
-        if (numQuy[boatSide] - tempNumQuy < 0 || numSu[boatSide] - tempNumSu < 0) {
+    bool inputValidation(int tempnumDevils, int tempnumPriests) {
+        // Check if the number of "devil" and "priest" on the current side will go below zero
+        if (numDevils[boatSide] - tempnumDevils < 0 || numPriests[boatSide] - tempnumPriests < 0) {
             return false;
         }
-        // Check if the number of "quý" and "sứ" on the other side will be valid after the move
-        if ((numQuy[3 - boatSide] + tempNumQuy > numSu[3 - boatSide] + tempNumSu && numSu[3 - boatSide] + tempNumSu > 0) ||
-            (numQuy[boatSide] - tempNumQuy > numSu[boatSide] - tempNumSu && numSu[boatSide] - tempNumSu > 0)) {
+        // Check if the number of "devil" and "priest" on the other side will be valid after the move
+        if ((numDevils[3 - boatSide] + tempnumDevils > numPriests[3 - boatSide] + tempnumPriests && numPriests[3 - boatSide] + tempnumPriests > 0) ||
+            (numDevils[boatSide] - tempnumDevils > numPriests[boatSide] - tempnumPriests && numPriests[boatSide] - tempnumPriests > 0)) {
             return false;
         }
         return true;
@@ -74,7 +86,7 @@ int main() {
     do {
         Game game;
         game.play();
-        cout << "Bạn có muốn chơi lại không? (y/n): ";
+        cout << "Do you want to play again (y/n): ";
         cin >> playAgain;
     } while(playAgain == 'y'|| playAgain == 'Y');
     return 0;
