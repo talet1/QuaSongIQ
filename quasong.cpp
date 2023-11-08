@@ -39,6 +39,7 @@ private:
         cout << "Boat: " << (boatSide == 1 ? "-->" : "<--") << endl;
     }
     */
+   
    // Display game state with ASCII art
    void displayGameState() {
         cout << "Side 1: " << string(numDevils[1], 'D') << " " << string(numPriests[1], 'P') << endl;
@@ -82,6 +83,20 @@ private:
 };
 
 int main() {
+    cout << "Welcome to the game!" << endl;
+    cout << "Game Rules:" << endl;
+    cout << "1. The boat can carry at most two passengers." << endl;
+    cout << "2. The boat cannot move without passengers." << endl;
+    cout << "3. If there are more devils than priests on either side of the river, you lose." << endl;
+    cout << "4. Move all the priests and devils from side 1 to side 2 to win." << endl;
+
+    char readyToPlay;
+    cout << "Are you ready to start the game? (y/n): ";
+    cin >> readyToPlay;
+    if (readyToPlay == 'n' || readyToPlay == 'N') {
+        return 0;
+    }
+    
     char playAgain;
     do {
         Game game;
