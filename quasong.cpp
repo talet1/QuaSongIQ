@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 using namespace std;
 
 class Game {
@@ -33,13 +34,7 @@ public:
     }
 
 private:
-    /*void displayGameState() {
-        cout << "Side 1: " << numDevils[1] << " Devils, " << numPriests[1] << " Priests" << endl;
-        cout << "Side 2: " << numDevils[2] << " Devils, " << numPriests[2] << " Priests" << endl;
-        cout << "Boat: " << (boatSide == 1 ? "-->" : "<--") << endl;
-    }
-    */
-   
+
    // Display game state with ASCII art
    void displayGameState() {
         cout << "Side 1: " << string(numDevils[1], 'D') << " " << string(numPriests[1], 'P') << endl;
@@ -54,9 +49,17 @@ private:
     // Get input
     void getInput(int &numDevils, int &numPriests) {
         cout << "Enter number of devils: ";
-        cin >> numDevils;
+        while(!(cin >> numDevils)) {
+            cout << "Invalid input. Please enter an integer: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
         cout << "Enter number of priests: ";
-        cin >> numPriests;
+        while(!(cin >> numPriests)) {
+            cout << "Invalid input. Please enter an integer: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
     }
     // Validate input
     bool inputValidation(int tempnumDevils, int tempnumPriests) {
