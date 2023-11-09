@@ -1,4 +1,3 @@
-document.getElementById('startGame').addEventListener('click', startGame);
 
 class Game {
     constructor() {
@@ -10,7 +9,7 @@ class Game {
         while (this.numDevils[2] < 3 || this.numPriests[2] < 3) {
             while (true) {
                 this.displayGameState();
-                let {numDevils: tempnumDevils, numPriests: tempnumPriests} = await this.getInput();
+                let {numDevils: tempnumDevils, numPriests: tempnumPriests} = this.getInput();
                 if (!this.inputValidation(tempnumDevils, tempnumPriests)) {
                     console.log("Invalid move. Please try again.");
                     continue;
@@ -44,26 +43,21 @@ class Game {
     }
 
     // Get input
-    async getInput() {
-        const readline = require('readline').createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
+    getInput() {
 
-        let numDevils = await new Promise(resolve => readline.question('Enter number of devils: ', resolve));
+        let numDevils = prompt('Enter number of devils: ');
         while(isNaN(numDevils)) {
-            numDevils = await new Promise(resolve => readline.question('Invalid input. Please enter an integer: ', resolve));
+            numDevils = prompt('Invalid input. Please enter an integer: ');
         }
 
-        let numPriests = await new Promise(resolve => readline.question('Enter number of priests: ', resolve));
+        let numPriests = prompt('Enter number of priests: ');
         while(isNaN(numPriests)) {
-            numPriests = await new Promise(resolve => readline.question('Invalid input. Please enter an integer: ', resolve));
+            numPriests = prompt('Invalid input. Please enter an integer: ');
         }
-
-        readline.close();
 
         return { numDevils: parseInt(numDevils), numPriests: parseInt(numPriests) };
     }
+
     // Validate input
     inputValidation(tempnumDevils, tempnumPriests) {
         // Check if the number of "devil" and "priest" on the current side will go below zero
@@ -89,7 +83,7 @@ class Game {
     }
 }
 
-async function startGame() {
+function startGame() {
     console.log("Welcome to the game!");
     console.log("Game Rules:");
     console.log("1. The boat can carry at most two passengers.");
@@ -97,25 +91,18 @@ async function startGame() {
     console.log("3. If there are more devils than priests on either side of the river, you lose.");
     console.log("4. Move all the priests and devils from side 1 to side 2 to win.");
 
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
 
-    let readyToPlay = await new Promise(resolve => readline.question('Are you ready to start the game? (y/n): ', resolve));
+    let readyToPlay = prompt('Are you ready to start the game? (y/n): ');
     if (readyToPlay.toLowerCase() === 'n') {
-        readline.close();
         return;
     }
 
     let playAgain;
     do {
         let game = new Game();
-        await game.play();
-        playAgain = await new Promise(resolve => readline.question('Do you want to play again? (y/n): ', resolve));
+        game.play();
+        playAgain = prompt('Do you want to play again? (y/n): ');
     } while (playAgain.toLowerCase() === 'y');
-
-    readline.close();
 }
 
-startGame();
+document.getElementById('startGame').addEventListener('click', startGame);
